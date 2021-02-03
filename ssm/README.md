@@ -11,7 +11,7 @@ For instance:
 
 ```terraform
 module "ssm_parameters" {
-  source = "github.com/EATechSolutions/tf-ssm?ref=master"
+  source = "git::https://github.com/EATechSolutions/tf-aws-library.git//ssm"
 
   application_name = "example"
   environment      = "dev"
