@@ -14,7 +14,7 @@ You can copy the example files in the local module policies directory. To set up
 
 ```terraform
 module "iam" {
-  source = "github.com/rpstreef/tf-iam?ref=v1.0"
+  source = "git::https://github.com/EATechSolutions/tf-aws-library.git//iam"
 
   namespace         = var.namespace
   region            = var.region
