@@ -36,6 +36,13 @@ module "codepipeline" {
 
   stack_name = var.stack_name
 
+  parameter_overide_json = jsonencode({
+    FromEmail = var.from_email
+    ClientEmail = var.client_email
+    CorsOrigin = var.cors_origin
+    Region = var.region
+  })
+
   environment_variable_map = [
     {
       name  = "REGION"
