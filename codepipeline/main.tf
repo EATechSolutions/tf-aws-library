@@ -31,13 +31,6 @@ resource "aws_s3_bucket" "artifact_store" {
   }
 }
 
-data "template_file" "buildspec" {
-  template = var.buildspec
-  vars = {
-    s3_bucket_name = aws_s3_bucket.artifact_store.bucket
-  }
-}
-
 module "iam_codepipeline" {
   source = "../iam"
 
@@ -270,7 +263,7 @@ resource "aws_codebuild_project" "_" {
 
   source {
     type      = "CODEPIPELINE"
-    buildspec = data.template_file.buildspec.rendered
+    buildspec = var.buildspec
   }
 
   tags = {
