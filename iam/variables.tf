@@ -3,12 +3,12 @@
 # -----------------------------------------------------------------------------
 
 variable "application_name" {
-  type = string
+  type        = string
   description = "The name of the application"
 }
 
 variable "environment" {
-  type = string
+  type        = string
   description = "Environment"
 }
 
@@ -34,7 +34,7 @@ variable "policy_name" {
 
 variable "policy_attachment_name" {
   description = "Name of the policy attachment document"
-  default = "attachment"
+  default     = "attachment"
 }
 
 variable "role_vars" {

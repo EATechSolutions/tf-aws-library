@@ -10,5 +10,5 @@ output "badge_url" {
 
 output "s3_bucket_name" {
   description = "The Artifact bucket name"
-  value = aws_s3_bucket.artifact_store.bucket
+  value       = aws_s3_bucket.artifact_store.bucket
 }

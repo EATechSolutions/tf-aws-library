@@ -1,9 +1,9 @@
 variable "application_name" {
-  type = string
+  type        = string
   description = "The name of the application"
 }
 
 variable "environment" {
-  type = string
+  type        = string
   description = "Environment"
 }

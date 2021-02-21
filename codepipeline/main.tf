@@ -1,6 +1,6 @@
 locals {
   resource_name_prefix = "${var.application_name}-${var.environment}"
-  stack_name =  var.stack_name != "" ? var.stack_name : "${var.application_name}-${var.environment}"
+  stack_name           = var.stack_name != "" ? var.stack_name : "${var.application_name}-${var.environment}"
 }
 
 # -----------------------------------------------------------------------------
@@ -35,8 +35,8 @@ module "iam_codepipeline" {
   source = "../iam"
 
   application_name = var.application_name
-  environment         = var.environment
-  region            = var.region
+  environment      = var.environment
+  region           = var.region
 
   assume_role_policy = file("${path.module}/policies/codepipeline-assume-role.json")
   template           = file("${path.module}/policies/codepipeline-policy.json")
@@ -44,14 +44,8 @@ module "iam_codepipeline" {
   policy_name        = "codepipeline-policy"
 
   role_vars = {
-    codebuild_project_arn   = aws_codebuild_project._.arn
-    s3_bucket_arn           = aws_s3_bucket.artifact_store.arn
-    # codestarconnections_arn = aws_codestarconnections_connection._.arn
-        // {
-    //   "Effect": "Allow",
-    //   "Action": "codestar-connections:UseConnection",
-    //   "Resource": "${codestarconnections_arn}"
-    // }
+    codebuild_project_arn = aws_codebuild_project._.arn
+    s3_bucket_arn         = aws_s3_bucket.artifact_store.arn
   }
 }
 
@@ -59,8 +53,8 @@ module "iam_cloudformation" {
   source = "../iam"
 
   application_name = var.application_name
-  environment         = var.environment
-  region            = var.region
+  environment      = var.environment
+  region           = var.region
 
   assume_role_policy = file("${path.module}/policies/cloudformation-assume-role.json")
   template           = file("${path.module}/policies/cloudformation-policy.json")
@@ -73,16 +67,6 @@ module "iam_cloudformation" {
   }
 }
 
-# resource "aws_codestarconnections_connection" "_" {
-#   name          = "${var.application_name}-connection"
-#   provider_type = "GitHub"
-# }
-
-# data "aws_kms_alias" "s3kmskey" {
-#   name = "alias/myKmsKey"
-# }
-
-
 resource "aws_codepipeline" "_" {
   name     = "${local.resource_name_prefix}-codepipeline"
   role_arn = module.iam_codepipeline.role_arn
@@ -90,30 +74,10 @@ resource "aws_codepipeline" "_" {
   artifact_store {
     location = aws_s3_bucket.artifact_store.bucket
     type     = "S3"
-
-    # encryption_key {
-    #   id   = data.aws_kms_alias.s3kmskey.arn
-    #   type = "KMS"
-    # }
   }
 
   stage {
     name = "Source"
-
-    # action {
-    #   name             = "Source"
-    #   category         = "Source"
-    #   owner            = "AWS"
-    #   provider         = "CodeStarSourceConnection"
-    #   version          = "1"
-    #   output_artifacts = ["source"]
-
-    #   configuration = {
-    #     ConnectionArn    = aws_codestarconnections_connection._.arn
-    #     FullRepositoryId = var.github_repo
-    #     BranchName       = var.github_branch
-    #   }
-    # }
 
     action {
       name             = "Source"
@@ -213,8 +177,8 @@ module "iam_codebuild" {
   source = "../iam"
 
   application_name = var.application_name
-  environment         = var.environment
-  region            = var.region
+  environment      = var.environment
+  region           = var.region
 
   assume_role_policy = file("${path.module}/policies/codebuild-assume-role.json")
   template           = file("${path.module}/policies/codebuild-policy.json")
@@ -249,7 +213,7 @@ resource "aws_codebuild_project" "_" {
       name  = "ARTIFACT_BUCKET"
       value = aws_s3_bucket.artifact_store.bucket
     }
-    
+
     dynamic "environment_variable" {
       for_each = var.environment_variable_map
 

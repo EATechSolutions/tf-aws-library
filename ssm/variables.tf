@@ -1,5 +1,5 @@
 variable "parameters" {
-  type        = map
+  type        = map(any)
   description = "List of SSM Parameters with format: { name, type, value }"
 }
 

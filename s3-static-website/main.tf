@@ -9,19 +9,19 @@ data "template_file" "_" {
 # Resource: Random string
 # ----------------------------------
 resource "random_string" "postfix" {
-  length = 6
-  number = false
-  upper = false
+  length  = 6
+  number  = false
+  upper   = false
   special = false
-  lower = true
+  lower   = true
 }
 
 # ----------------------------------
 # Resource: Website Bucket
 # ----------------------------------
 resource "aws_s3_bucket" "website" {
-  bucket = "${var.application_name}.${var.environment}.website.${random_string.postfix.result}"
-  acl = "public-read"
+  bucket        = "${var.application_name}.${var.environment}.website.${random_string.postfix.result}"
+  acl           = "public-read"
   force_destroy = true
 
   website {

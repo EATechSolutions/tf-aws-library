@@ -3,12 +3,12 @@
 # -----------------------------------------------------------------------------
 
 variable "application_name" {
-  type = string
+  type        = string
   description = "The name of the application"
 }
 
 variable "environment" {
-  type = string
+  type        = string
   description = "Environment"
 }
 
@@ -70,7 +70,7 @@ variable "environment_variable_map" {
 variable "stack_name" {
   type        = string
   description = "AWS SAM stack name"
-  default = ""
+  default     = ""
 }
 
 variable "github_token" {
@@ -101,7 +101,7 @@ variable "poll_source_changes" {
 }
 
 variable "parameter_overide_json" {
-  type = string
-  default = "{}"
+  type        = string
+  default     = "{}"
   description = "Overiding SAM parameters"
 }
