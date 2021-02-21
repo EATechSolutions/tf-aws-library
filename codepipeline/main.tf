@@ -1,6 +1,6 @@
 locals {
-  resource_name = "${var.namespace}-${var.resource_tag_name}"
-  stack_name = "${var.stack_name}-${random_string.postfix.result}"
+  resource_name_prefix = "${var.application_name}-${var.environment}"
+  stack_name =  var.stack_name != "" ? var.stack_name : "${var.application_name}-${var.environment}"
 }
 
 # -----------------------------------------------------------------------------
@@ -18,7 +18,7 @@ resource "random_string" "postfix" {
 # Resources: CodePipeline
 # -----------------------------------------------------------------------------
 resource "aws_s3_bucket" "artifact_store" {
-  bucket        = "${local.resource_name}-codepipeline-artifacts-${random_string.postfix.result}"
+  bucket        = "${local.resource_name_prefix}-codepipeline-artifacts-${random_string.postfix.result}"
   acl           = "private"
   force_destroy = true
 
@@ -34,9 +34,9 @@ resource "aws_s3_bucket" "artifact_store" {
 module "iam_codepipeline" {
   source = "../iam"
 
-  namespace         = var.namespace
+  application_name = var.application_name
+  environment         = var.environment
   region            = var.region
-  resource_tag_name = var.resource_tag_name
 
   assume_role_policy = file("${path.module}/policies/codepipeline-assume-role.json")
   template           = file("${path.module}/policies/codepipeline-policy.json")
@@ -58,9 +58,9 @@ module "iam_codepipeline" {
 module "iam_cloudformation" {
   source = "../iam"
 
-  namespace         = var.namespace
+  application_name = var.application_name
+  environment         = var.environment
   region            = var.region
-  resource_tag_name = var.resource_tag_name
 
   assume_role_policy = file("${path.module}/policies/cloudformation-assume-role.json")
   template           = file("${path.module}/policies/cloudformation-policy.json")
@@ -74,7 +74,7 @@ module "iam_cloudformation" {
 }
 
 # resource "aws_codestarconnections_connection" "_" {
-#   name          = "${var.resource_tag_name}-connection"
+#   name          = "${var.application_name}-connection"
 #   provider_type = "GitHub"
 # }
 
@@ -84,7 +84,7 @@ module "iam_cloudformation" {
 
 
 resource "aws_codepipeline" "_" {
-  name     = "${local.resource_name}-codepipeline"
+  name     = "${local.resource_name_prefix}-codepipeline"
   role_arn = module.iam_codepipeline.role_arn
 
   artifact_store {
@@ -197,8 +197,8 @@ resource "aws_codepipeline" "_" {
   }
 
   tags = {
-    Environment = var.namespace
-    Name        = var.resource_tag_name
+    Environment = var.environment
+    Name        = var.application_name
   }
 
   lifecycle {
@@ -212,9 +212,9 @@ resource "aws_codepipeline" "_" {
 module "iam_codebuild" {
   source = "../iam"
 
-  namespace         = var.namespace
+  application_name = var.application_name
+  environment         = var.environment
   region            = var.region
-  resource_tag_name = var.resource_tag_name
 
   assume_role_policy = file("${path.module}/policies/codebuild-assume-role.json")
   template           = file("${path.module}/policies/codebuild-policy.json")
@@ -227,8 +227,8 @@ module "iam_codebuild" {
 }
 
 resource "aws_codebuild_project" "_" {
-  name          = "${local.resource_name}-codebuild"
-  description   = "${local.resource_name}_codebuild_project"
+  name          = "${local.resource_name_prefix}-codebuild"
+  description   = "${local.resource_name_prefix}_codebuild_project"
   build_timeout = var.build_timeout
   badge_enabled = var.badge_enabled
   service_role  = module.iam_codebuild.role_arn
@@ -267,7 +267,7 @@ resource "aws_codebuild_project" "_" {
   }
 
   tags = {
-    Environment = var.namespace
-    Name        = var.resource_tag_name
+    Environment = var.environment
+    Name        = var.application_name
   }
 }

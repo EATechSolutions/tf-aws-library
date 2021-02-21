@@ -1,4 +1,4 @@
-# Terraform API Gateway Module
+# Terraform SSM Module
 
 ## About:
 

@@ -1,5 +1,5 @@
 locals {
-  resource_name_prefix = "${var.namespace}-${var.resource_tag_name}"
+  resource_name_prefix = "${var.application_name}-${var.environment}"
 }
 
 # -----------------------------------------------------------------------------

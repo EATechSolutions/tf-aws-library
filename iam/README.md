@@ -16,9 +16,9 @@ You can copy the example files in the local module policies directory. To set up
 module "iam" {
   source = "git::https://github.com/EATechSolutions/tf-aws-library.git//iam"
 
-  namespace         = var.namespace
-  region            = var.region
-  resource_tag_name = var.resource_tag_name
+  application_name    = var.application_name
+  environment         = var.environment
+  region              = var.region
 
   assume_role_policy = file("${path.module}/policies/lambda-assume-role.json")
   template           = file("${path.module}/policies/lambda.json")

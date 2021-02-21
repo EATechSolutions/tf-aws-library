@@ -2,16 +2,18 @@
 # Variables: General
 # -----------------------------------------------------------------------------
 
-variable "namespace" {
-  description = "AWS resource namespace/prefix"
+variable "application_name" {
+  type = string
+  description = "The name of the application"
+}
+
+variable "environment" {
+  type = string
+  description = "Environment"
 }
 
 variable "region" {
   description = "AWS region"
-}
-
-variable "resource_tag_name" {
-  description = "Resource tag name for cost tracking"
 }
 
 # -----------------------------------------------------------------------------
@@ -68,6 +70,7 @@ variable "environment_variable_map" {
 variable "stack_name" {
   type        = string
   description = "AWS SAM stack name"
+  default = ""
 }
 
 variable "github_token" {

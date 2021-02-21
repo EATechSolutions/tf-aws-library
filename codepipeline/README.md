@@ -22,9 +22,9 @@ data "template_file" "buildspec" {
 module "codepipeline" {
   source = "git::https://github.com/EATechSolutions/tf-aws-library.git//codepipeline"
 
-  resource_tag_name = var.resource_tag_name
-  namespace         = var.namespace
-  region            = var.region
+  application_name    = var.application_name
+  environment         = var.environment
+  region              = var.region
 
   github_token        = var.github_token
   github_owner        = var.github_owner
@@ -34,7 +34,7 @@ module "codepipeline" {
   build_image = "aws/codebuild/standard:4.0"
   buildspec   = data.template_file.buildspec.rendered
 
-  stack_name = var.stack_name
+  stack_name = var.stack_name?
 
   parameter_overide_json = jsonencode({
     FromEmail = var.from_email
