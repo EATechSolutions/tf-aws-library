@@ -20,8 +20,8 @@ resource "random_string" "postfix" {
 # Resource: Website Bucket
 # ----------------------------------
 resource "aws_s3_bucket" "website" {
-  bucket = "${var.env}.${var.project_name}.website.${random_string.postfix.result}"
-  acl    = "public-read"
+  bucket = "${var.application_name}.${var.environment}.website.${random_string.postfix.result}"
+  acl = "public-read"
   force_destroy = true
 
   website {

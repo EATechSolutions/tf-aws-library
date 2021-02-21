@@ -1,10 +1,9 @@
-variable "project_name" {
+variable "application_name" {
   type = string
-  description = "the name of the project"
+  description = "The name of the application"
 }
 
-variable "env" {
+variable "environment" {
   type = string
   description = "Environment"
-  default = "dev"
 }
