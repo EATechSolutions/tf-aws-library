@@ -1,3 +1,7 @@
+locals {
+  bucket_name = var.bucket_name != "" ? var.bucket_name : "${var.application_name}.${var.environment}.website.${random_string.postfix.result}"
+}
+
 data "template_file" "_" {
   template = file("${path.module}/policies/website-policy.json")
   vars = {
@@ -20,7 +24,7 @@ resource "random_string" "postfix" {
 # Resource: Website Bucket
 # ----------------------------------
 resource "aws_s3_bucket" "website" {
-  bucket        = "${var.application_name}.${var.environment}.website.${random_string.postfix.result}"
+  bucket        = local.bucket_name
   acl           = "public-read"
   force_destroy = true
 
