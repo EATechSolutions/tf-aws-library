@@ -9,7 +9,7 @@ variable "environment" {
 }
 
 variable "bucket_name" {
-  type        = "string"
+  type        = string
   description = "if you know the bucket name"
   default     = ""
 }
