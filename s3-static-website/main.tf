@@ -41,9 +41,9 @@ resource "aws_s3_bucket_policy" "_" {
 }
 
 # ----------------------------------
-# Resource: Cloudformation
+# Resource: Cloudfront
 # ----------------------------------
-resource "aws_cloudfront_distribution" "cloudfront" {
+resource "aws_cloudfront_distribution" "_" {
   count = var.domain == "" ? 0 : 1
 
   origin {
@@ -86,5 +86,19 @@ resource "aws_cloudfront_distribution" "cloudfront" {
   viewer_certificate {
     acm_certificate_arn = var.ssl_certificate
     ssl_support_method  = "sni-only"
+  }
+}
+
+resource "aws_route53_record" "www" {
+  count = var.route53_hosted_zone_id == "" ? 0 : 1
+
+  zone_id = var.route53_hosted_zone_id
+  name    = var.domain
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution._.domain_name
+    zone_id                = aws_cloudfront_distribution._.hosted_zone_id
+    evaluate_target_health = false
   }
 }

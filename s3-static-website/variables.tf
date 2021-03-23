@@ -24,3 +24,9 @@ variable "ssl_certificate" {
   type        = string
   description = "Certificate manager created cerificate ARN"
 }
+
+variable "route53_hosted_zone_id" {
+  type        = string
+  description = "Zone ID of the Route 53 hosted zone"
+  default     = ""
+}
