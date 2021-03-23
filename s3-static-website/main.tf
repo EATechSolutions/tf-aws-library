@@ -58,7 +58,6 @@ resource "aws_cloudfront_distribution" "cloudfront" {
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
-    path_pattern           = "*"
     viewer_protocol_policy = "redirect-to-https"
     target_origin_id       = local.s3_origin_id
   }
