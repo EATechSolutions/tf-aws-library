@@ -13,3 +13,14 @@ variable "bucket_name" {
   description = "if you know the bucket name"
   default     = ""
 }
+
+variable "domain" {
+  type        = string
+  description = "If specified it creates a cloudfront distribution with route 53 record"
+  default     = ""
+}
+
+variable "ssl_certificate" {
+  type        = string
+  description = "Certificate manager created cerificate ARN"
+}
