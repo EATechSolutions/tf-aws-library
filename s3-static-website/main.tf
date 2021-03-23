@@ -53,7 +53,7 @@ resource "aws_cloudfront_distribution" "cloudfront" {
 
   enabled         = true
   is_ipv6_enabled = true
-  aliases         = [vardomain, "www.${var.domain}"]
+  aliases         = [var.domain, "www.${var.domain}"]
 
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD"]
