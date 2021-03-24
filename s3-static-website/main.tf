@@ -43,7 +43,7 @@ resource "aws_s3_bucket_policy" "_" {
 # ----------------------------------
 # Resource: Cloudfront
 # ----------------------------------
-resource "aws_cloudfront_distribution" "_" {
+resource "aws_cloudfront_distribution" "cloudfront" {
   count = var.domain == "" ? 0 : 1
 
   origin {
@@ -97,8 +97,8 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution._[0].domain_name
-    zone_id                = aws_cloudfront_distribution._[0].hosted_zone_id
+    name                   = aws_cloudfront_distribution.cloudfront[0].domain_name
+    zone_id                = aws_cloudfront_distribution.cloudfront[0].hosted_zone_id
     evaluate_target_health = false
   }
 }
