@@ -69,14 +69,21 @@ resource "aws_route53_record" "www" {
 # Resource: Certificate Manager
 # ----------------------------------
 resource "aws_acm_certificate" "cert" {
+  provider = aws.acm
+
   domain_name               = local.domain
-  subject_alternative_names = var.environment == "prod" ? ["www.${local.domain}"] : []
+  subject_alternative_names = ["*.${local.domain}"]
   validation_method         = "DNS"
-  provider                  = aws.acm
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate_validation" "cert_validation" {
-  certificate_arn = aws_acm_certificate.cert.arn
+  provider = aws.acm
+
+  certificate_arn         = aws_acm_certificate.cert.arn
   validation_record_fqdns = [for record in aws_route53_record.cert_dns_records : record.fqdn]
 }
 
