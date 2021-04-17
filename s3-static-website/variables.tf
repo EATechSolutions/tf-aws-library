@@ -14,20 +14,3 @@ variable "bucket_name" {
   default     = ""
 }
 
-variable "domain" {
-  type        = string
-  description = "If specified it creates a cloudfront distribution with route 53 record"
-  default     = ""
-}
-
-variable "ssl_certificate" {
-  type        = string
-  description = "Certificate manager created cerificate ARN"
-  default     = ""
-}
-
-variable "route53_hosted_zone_id" {
-  type        = string
-  description = "Zone ID of the Route 53 hosted zone"
-  default     = ""
-}

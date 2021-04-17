@@ -11,10 +11,13 @@ website -> ``http://example.dev.website.abcd12.s3-website.eu-west-2.amazonaws.co
 ## How to use:
 
 ```terraform
-module "web-bucket" {
-  source           = "git::https://github.com/EATechSolutions/tf-aws-library.git//s3-static-website"
+module "distribution" {
+  source                 = "git::https://github.com/EATechSolutions/tf-aws-library.git//secure-distribution"
 
-  application_name = "example"
-  environment      = "dev"
+  application_name       = "example"
+  environment            = "dev"
+  origin_endpoint        = "https://asjdaksdasjdasjd.asdaskdhiasud.com"
+  domain                 = "nice-name.com"
+  route53_hosted_zone_id = "asdasd.sadasd234234"
 }
 ```
