@@ -1,5 +1,5 @@
 locals {
-  origin_id = "${var.application_name}-${var.environment}-${origin_endpoint}"
+  origin_id = "${var.application_name}-${var.environment}-${var.origin_endpoint}"
   domain    = var.environment == "prod" ? var.domain : "${var.environment}.${var.domain}"
 }
 
