@@ -1,7 +1,7 @@
 locals {
   bucket_name  = var.bucket_name != "" ? var.bucket_name : "${var.application_name}.${var.environment}.website.${random_string.postfix.result}"
   s3_origin_id = "${var.application_name}-${var.environment}-s3-origin"
-  domain = var.environment == "prod" || var.domain == "" ? var.domain : "${var.environment}.${var.domain}"
+  domain       = var.environment == "prod" || var.domain == "" ? var.domain : "${var.environment}.${var.domain}"
 }
 
 data "template_file" "_" {
@@ -113,22 +113,22 @@ resource "aws_route53_record" "www" {
 resource "aws_acm_certificate" "cert" {
   count = local.domain == "" ? 0 : 1
 
-  domain_name = local.domain
+  domain_name               = local.domain
   subject_alternative_names = var.environment == "prod" ? ["www.${local.domain}"] : []
-  validation_method = "DNS"
+  validation_method         = "DNS"
 }
 
 resource "aws_acm_certificate_validation" "cert_validation" {
-  certificate_arn         = aws_acm_certificate.cert.arn
+  certificate_arn = aws_acm_certificate.cert.arn
   # validation_record_fqdns = [for record in aws_route53_record.cert_dns_records : record.fqdn]
 }
 
 resource "aws_route53_record" "cert_dns_records" {
   for_each = {
     for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
-      name    = dvo.resource_record_name
-      record  = dvo.resource_record_value
-      type    = dvo.resource_record_type
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
     }
   }
 
