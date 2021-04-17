@@ -1,6 +1,7 @@
 locals {
   bucket_name  = var.bucket_name != "" ? var.bucket_name : "${var.application_name}.${var.environment}.website.${random_string.postfix.result}"
   s3_origin_id = "${var.application_name}-${var.environment}-s3-origin"
+  domain = var.environment == "prod" || var.domain == "" ? var.domain : "${var.environment}.${var.domain}"
 }
 
 data "template_file" "_" {
@@ -44,7 +45,7 @@ resource "aws_s3_bucket_policy" "_" {
 # Resource: Cloudfront
 # ----------------------------------
 resource "aws_cloudfront_distribution" "cloudfront" {
-  count = var.domain == "" ? 0 : 1
+  count = local.domain == "" ? 0 : 1
 
   origin {
     domain_name = aws_s3_bucket.website.website_endpoint
@@ -60,7 +61,7 @@ resource "aws_cloudfront_distribution" "cloudfront" {
 
   enabled         = true
   is_ipv6_enabled = true
-  aliases         = [var.domain]
+  aliases         = [local.domain]
 
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD"]
@@ -84,16 +85,19 @@ resource "aws_cloudfront_distribution" "cloudfront" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = var.ssl_certificate
+    acm_certificate_arn = aws_acm_certificate_validation.cert_validation.certificate_arn
     ssl_support_method  = "sni-only"
   }
 }
 
+# ----------------------------------
+# Resource: Route 53
+# ----------------------------------
 resource "aws_route53_record" "www" {
-  count = var.route53_hosted_zone_id == "" ? 0 : 1
+  count = var.route53_hosted_zone_id == "" || local.domain == "" ? 0 : 1
 
   zone_id = var.route53_hosted_zone_id
-  name    = var.domain
+  name    = local.domain
   type    = "A"
 
   alias {
@@ -101,4 +105,37 @@ resource "aws_route53_record" "www" {
     zone_id                = aws_cloudfront_distribution.cloudfront[0].hosted_zone_id
     evaluate_target_health = false
   }
+}
+
+# ----------------------------------
+# Resource: Certificate Manager
+# ----------------------------------
+resource "aws_acm_certificate" "cert" {
+  count = local.domain == "" ? 0 : 1
+
+  domain_name = local.domain
+  subject_alternative_names = var.environment == "prod" ? ["www.${local.domain}"] : []
+  validation_method = "DNS"
+}
+
+resource "aws_acm_certificate_validation" "cert_validation" {
+  certificate_arn         = aws_acm_certificate.cert.arn
+  # validation_record_fqdns = [for record in aws_route53_record.cert_dns_records : record.fqdn]
+}
+
+resource "aws_route53_record" "cert_dns_records" {
+  for_each = {
+    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
+      name    = dvo.resource_record_name
+      record  = dvo.resource_record_value
+      type    = dvo.resource_record_type
+    }
+  }
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = var.route53_hosted_zone_id
 }
