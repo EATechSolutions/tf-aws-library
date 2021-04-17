@@ -72,6 +72,7 @@ resource "aws_acm_certificate" "cert" {
   domain_name               = local.domain
   subject_alternative_names = var.environment == "prod" ? ["www.${local.domain}"] : []
   validation_method         = "DNS"
+  provider                  = aws.acm
 }
 
 resource "aws_acm_certificate_validation" "cert_validation" {
