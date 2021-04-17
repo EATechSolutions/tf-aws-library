@@ -1,7 +1,6 @@
 locals {
   bucket_name  = var.bucket_name != "" ? var.bucket_name : "${var.application_name}.${var.environment}.website.${random_string.postfix.result}"
   s3_origin_id = "${var.application_name}-${var.environment}-s3-origin"
-  domain       = var.environment == "prod" || var.domain == "" ? var.domain : "${var.environment}.${var.domain}"
 }
 
 data "template_file" "_" {
