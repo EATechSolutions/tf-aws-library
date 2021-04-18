@@ -24,6 +24,6 @@ variable "route53_hosted_zone_id" {
 }
 
 variable "certificate_arn" {
-  type = string
+  type        = string
   description = "The certificate arn created for this distribution"
 }
