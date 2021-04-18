@@ -20,45 +20,17 @@ defaults:
     working-directory: backend
 
 jobs:
-  draft:
-    name: 'Draft release'
+  publish:
+    name: 'Publish release'
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Draft release
+      - name: Publish release
         id: create_release
         uses: release-drafter/release-drafter@v5
         with:
           publish: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish release
-        run: echo "${{ fromJson(steps.create_release.outputs) }}"
-        # uses: eregon/publish-release@v1
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # with:
-        #   release_id: ${{ steps.create_release.outputs.id }
-
-  # select-env:
-  #   name: "Create release"
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
-  #     - name: Create Release
-  #       id: create_release
-  #       uses: actions/create-release@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-  #       with:
-  #         tag_name: ${{ github.ref }}
-  #         release_name: Release ${{ github.ref }}
-  #         body: |
-  #           Changes in this Release
-  #           - First Change
-  #           - Second Change
-  #         draft: false
-  #         prerelease: false
