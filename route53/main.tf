@@ -12,6 +12,7 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   records = [var.origin_endpoint]
+  ttl     = "30"
   # alias {
   #   name                   = var.api_endpoint
   #   zone_id                = var.route53_hosted_zone_id
