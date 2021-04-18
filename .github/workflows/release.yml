@@ -33,7 +33,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish release
-        run: echo "${{ steps.create_release.outputs }"
+        run: echo "${{ steps.create_release.outputs }}"
         # uses: eregon/publish-release@v1
         # env:
         #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
