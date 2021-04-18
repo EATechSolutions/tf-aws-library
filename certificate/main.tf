@@ -1,5 +1,5 @@
 locals {
-  domain    = var.environment == "prod" ? var.domain : "${var.environment}.${var.domain}"
+  domain = var.environment == "prod" ? var.domain : "${var.environment}.${var.domain}"
 }
 
 # ----------------------------------
