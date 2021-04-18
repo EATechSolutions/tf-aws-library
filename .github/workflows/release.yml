@@ -3,8 +3,11 @@ on:
   push:
     branches:
     - master
-    tags:
-      - 'v*' 
+    # tags:
+    #   - 'v*'
+  # pull_request:
+  # release:
+  #   types: [created]
   workflow_dispatch:
     inputs:
       confirm:
@@ -19,14 +22,25 @@ defaults:
 jobs:
   draft:
     name: 'Draft release'
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Draft release
+        id: create_release
         uses: release-drafter/release-drafter@v5
+        with:
+          publish: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish release
+        run: echo "${{ fromJson(steps.create_release.outputs) }}"
+        # uses: eregon/publish-release@v1
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # with:
+        #   release_id: ${{ steps.create_release.outputs.id }
 
   # select-env:
   #   name: "Create release"
