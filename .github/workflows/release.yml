@@ -22,7 +22,7 @@ defaults:
 jobs:
   draft:
     name: 'Draft release'
-    if: github.event_name == 'push'
+    # if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
