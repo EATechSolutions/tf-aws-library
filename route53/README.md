@@ -11,16 +11,14 @@ website -> ``http://example.dev.website.abcd12.s3-website.eu-west-2.amazonaws.co
 ## How to use:
 
 ```terraform
-module "certificate" {
-  source                 = "git::https://github.com/EATechSolutions/tf-aws-library.git//certificate"
+module "route53" {
+  source                 = "git::https://github.com/EATechSolutions/tf-aws-library.git//route53"
 
   application_name       = "example"
   environment            = "dev"
+  origin_endpoint        = "https://asjdaksdasjdasjd.asdaskdhiasud.com"
   domain                 = "nice-name.com"
   route53_hosted_zone_id = "asdasd.sadasd234234"
+  subdomain              = "api"
 }
 ```
-
-## Outputs
-
-- certificate_arn
