@@ -2,7 +2,7 @@ locals {
   user_pool_name = "${var.application_name}-${var.environment}-user_pool"
   user_pool_client_web_name = "${var.application_name}-${var.environment}-user_pool_client_web"
   # user_pool_client_name = "${var.application_name}-${var.environment}-user_pool_client"
-  # user_pool_domain = "${var.application_name}-${var.environment}"
+  user_pool_domain = "${var.application_name}-${var.environment}"
   identity_pool_name = "${var.application_name}-${var.environment}-identity_pool"
   authenticated_role_name = "${var.application_name}-${var.environment}-authenticated_role"
   authenticated_role_policy_name = "${var.application_name}-${var.environment}-authenticated_role_policy"
@@ -138,11 +138,11 @@ resource "aws_cognito_user_pool_client" "client_web" {
 #   ]
 # }
 
-# # hosted UI settings
-# resource "aws_cognito_user_pool_domain" "main" {
-#   domain = local.user_pool_domain
-#   user_pool_id = aws_cognito_user_pool.user_pool.id
-# }
+# hosted UI settings
+resource "aws_cognito_user_pool_domain" "main" {
+  domain = local.user_pool_domain
+  user_pool_id = aws_cognito_user_pool.user_pool.id
+}
 
 # # Facebook identity provider
 # resource "aws_cognito_identity_provider" "facebook" {
